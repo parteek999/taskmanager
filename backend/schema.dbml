@@ -1,0 +1,18 @@
+Table users {
+  id uuid [pk, default: `uuid_generate_v4()`]
+  email varchar [unique, not null]
+  name varchar [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table tasks {
+  id uuid [pk, default: `uuid_generate_v4()`]
+  title varchar [not null]
+  description text
+  status varchar [default: 'pending']
+  due_date timestamp
+  created_by uuid [ref: > users.id]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+} 
