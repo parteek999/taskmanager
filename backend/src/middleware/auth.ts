@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import { FastifyRequest, FastifyReply } from 'fastify';
 
 // Initialize Firebase Admin
 admin.initializeApp({
@@ -11,8 +10,8 @@ admin.initializeApp({
 });
 
 export const authenticate = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+  request: any,
+  reply: any
 ) => {
   try {
     const authHeader = request.headers.authorization;

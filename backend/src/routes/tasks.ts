@@ -13,6 +13,12 @@ async function routes(fastify: FastifyInstance) {
       description: 'Get all tasks for the current user',
       tags: ['tasks'],
       security: [{ bearerAuth: [] }],
+      querystring: {
+        type: 'object',
+        properties: {
+          filter: { type: 'string', enum: ['all', 'my'] }
+        }
+      },
       response: {
         200: {
           description: 'List of tasks',
@@ -39,7 +45,7 @@ async function routes(fastify: FastifyInstance) {
       }
     },
     preHandler: authenticate
-  }, async (request: FastifyRequest, reply) => {
+  }, async (request: FastifyRequest<{ Querystring: { filter?: 'all' | 'my' } }>, reply) => {
     try {
       if (!request.user) {
         return reply.code(401).send({ error: 'Unauthorized' });
@@ -50,8 +56,11 @@ async function routes(fastify: FastifyInstance) {
         return reply.code(404).send({ error: 'User not found' });
       }
 
+      const filter = request.query.filter || 'my';
+      const whereClause = filter === 'my' ? { createdBy: user.id } : {};
+
       const tasks = await Task.findAll({
-        where: { createdBy: user.id },
+        where: whereClause,
         include: [
           {
             model: User,

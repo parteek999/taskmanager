@@ -6,7 +6,10 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: (to) => {
+        const authStore = useAuthStore();
+        return authStore.user ? '/tasks' : '/login';
+      }
     },
     {
       path: '/login',
@@ -29,13 +32,16 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthRoute = to.path === '/login' || to.path === '/register';
 
   if (requiresAuth && !authStore.user) {
+    // Redirect to login if trying to access protected route without auth
     next('/login');
-  } else if (!requiresAuth && authStore.user) {
+  } else if (isAuthRoute && authStore.user) {
+    // Redirect to tasks if trying to access auth routes while logged in
     next('/tasks');
   } else {
     next();

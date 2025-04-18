@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen bg-gray-100">
-    <nav v-if="isAuthenticated" class="bg-white shadow">
+    <nav v-if="showNavbar" class="bg-white shadow">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex">
             <div class="flex-shrink-0 flex items-center">
-              <span class="text-xl font-bold text-indigo-600">Task Manager</span>
+              <router-link to="/tasks" class="text-xl font-bold text-indigo-600">Task Manager</router-link>
             </div>
           </div>
           <div class="flex items-center">
@@ -28,13 +28,18 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from './stores/auth';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const isAuthenticated = computed(() => !!authStore.user);
+const showNavbar = computed(() => {
+  const authRoutes = ['/login', '/register', '/'];
+  return isAuthenticated.value && !authRoutes.includes(route.path);
+});
 
 const handleLogout = async () => {
   try {

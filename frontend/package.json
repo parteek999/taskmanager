@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
     "@vueuse/core": "^13.1.0",
     "axios": "^1.8.4",
     "firebase": "^11.6.0",
