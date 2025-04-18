@@ -56,4 +56,4 @@ API documentation is available at http://localhost:3000/api-docs when the applic
 
 ## License
 
-MIT License 
+MIT License
